@@ -58,8 +58,8 @@ describe "Authentication" do
        before { sign_in non_admin, no_capybara: true}
 
        describe "submitting a DELETE request to the Users#destroy action" do
-	 before { delete user_path(user) }
-         specify {expect(response).to redirect_to(root_url) }
+	       before { delete user_path(user) }
+          specify {expect(response).to redirect_to(root_url) }
        end
        describe "when attempting to visit a protected page" do
          before do
@@ -68,6 +68,7 @@ describe "Authentication" do
            fill_in "Password", with: user.password
            click_button "Sign in"
          end
+          
 
          describe "after signing in" do
 
@@ -76,19 +77,19 @@ describe "Authentication" do
            end
          end
        end #end of attempting visit page
-	
-       describe "in the Users controller" do
+	     
+    describe "in the Users controller" do
 	 
-	 describe "visiting the edit page" do
-	   before { visit edit_user_path(user) }
-	   it { should have_title('Sign in')}
-	 end
+	   describe "visiting the edit page" do
+	     before { visit edit_user_path(user) }
+	       it { should have_title('Sign in')}
+	     end
 	
-	 describe "submitting to the update action" do
+	   describe "submitting to the update action" do
 	   before { patch user_path(user) }
 	   #specify { expect(response).to redirect_to(signin_path) } error here
 	   #specify { response.should redirect_to(signin_path) }
-	 end
+	   end
 	 
 	 describe "visiting the user index" do
 	   before { visit users_path }
@@ -96,6 +97,19 @@ describe "Authentication" do
          end
        end
      end
+     
+      describe "in the Micropost controller" do
+        describe "submitting to the users action" do
+          before { post microposts_path}
+          specify { expect(response).to redirect_to(signin_path)}
+        end
+
+        describe "submitting to the destroy action" do
+            #before { delete micropost_path(FactoryGirl.create(:micropost))}
+          before { delete micropost_path(FactoryGirl.create(:micropost)) }
+          specify { expect(response).to redirect_to(signin_path)}
+        end
+      end #end of micropost controller
 
      describe "as wrong user" do
 	let(:user) { FactoryGirl.create(:user) }
